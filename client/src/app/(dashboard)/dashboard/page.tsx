@@ -1,3 +1,5 @@
+import { getPosts } from "@/data-access/posts";
+
 export default async function BlogsPage() {
   // TODO const user = await getUser();
 
@@ -11,5 +13,20 @@ export default async function BlogsPage() {
     throw new Error("Team not found");
   } */
 
-  return <div>Hi there!</div>;
+  const posts = await getPosts();
+
+  console.log("Posts::::");
+  console.log(posts);
+
+  return (
+    <>
+      {posts.map((post) => {
+        return (
+          <div key={post.id}>
+            {post.message} -- account id: {post.account_id}
+          </div>
+        );
+      })}
+    </>
+  );
 }
