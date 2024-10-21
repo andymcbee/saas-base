@@ -3,6 +3,13 @@
 A minimalist SaaS boilerplate to help developers focus on shipping revenue-connected features, and not boilerplate.
 This repo is a work in progress. This document outlines the final goal.
 
+## Starting the app locally
+
+### for NextJS
+
+- cd into client directory
+- run 'npm run dev'
+
 ## Tech Stack
 
 - NextJS 14 (TypeScript)
