@@ -21,3 +21,12 @@ export async function getPosts() {
   // return empty array if issue. Temp.
   return [];
 }
+
+export async function deletePostById(post_id: number) {
+  const supabase = createClient();
+
+  const response = await supabase.from("posts").delete().eq("id", post_id);
+
+  console.log("Res:::");
+  console.log(response);
+}

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { assembleUserData } from "@/lib/auth/auth";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -23,6 +24,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  assembleUserData();
   return (
     <html
       lang="en"
