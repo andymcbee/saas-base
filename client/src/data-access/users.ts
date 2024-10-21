@@ -1,5 +1,9 @@
 import { createClient } from "@/utils/supabase/server";
 
+export interface UserData {
+  account_ids: number[];
+}
+
 export async function getUserData() {
   const supabase = createClient();
 
@@ -10,5 +14,11 @@ export async function getUserData() {
     return null;
   }
 
-  return data;
+  const userAccountIds: number[] = data.map((item) => item.account_id);
+
+  const userData: UserData = {
+    account_ids: userAccountIds,
+  };
+
+  return userData;
 }
