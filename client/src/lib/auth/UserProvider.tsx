@@ -10,6 +10,28 @@ import {
 import { UserData } from "@/data-access/users"; // Adjust the path
 import { setCookie, getCookie, CookieValueTypes } from "cookies-next";
 
+function getCurrentUserCookie(): UserDataCookie | null {
+  const userDataCookie: CookieValueTypes = getCookie("userData");
+
+  let parsedUserDataCookie: any = null;
+
+  // Check if the cookie is a string before parsing
+  if (typeof userDataCookie === "string") {
+    try {
+      parsedUserDataCookie = JSON.parse(userDataCookie);
+    } catch (error) {
+      console.error("Error parsing cookie: ", error);
+    }
+  } else {
+    console.warn(
+      "Cookie is not a string or is undefined/boolean:",
+      userDataCookie
+    );
+  }
+
+  return parsedUserDataCookie;
+}
+
 // Interface for Account Data stored in cookie
 // it should mirror all the same data types as UserContextType
 // minus the setState and function definitions
@@ -54,32 +76,24 @@ export function UserProvider({
     null
   );
 
+  // useEffect to keep the cookie and the current state in sync
+
+  useEffect(() => {
+    console.log("USE EFFECT FOR ACCOUNT DATA STATE TRIGGERED!");
+    // modify the cookie to sync with the new accountDataState
+    if (accountDataState) {
+      const userDataCookie: UserDataCookie = {
+        accountData: accountDataState,
+      };
+      setCookie("userData", userDataCookie);
+    }
+  }, [accountDataState]);
+
   // used for detecting page re-loads
   // this should only trigger once since
   // the data is passed in via a Layout
   useEffect(() => {
-    const userDataCookie: CookieValueTypes = getCookie("userData");
-
-    console.log("Cookie data...");
-
-    let parsedUserDataCookie: UserDataCookie | null = null;
-
-    // Check if the cookie is a string before parsing
-    if (typeof userDataCookie === "string") {
-      try {
-        parsedUserDataCookie = JSON.parse(userDataCookie);
-      } catch (error) {
-        console.error("Error parsing cookie: ", error);
-      }
-    } else {
-      console.warn(
-        "Cookie is not a string or is undefined/boolean:",
-        userDataCookie
-      );
-    }
-
-    console.log("Cookie:::");
-    console.log(parsedUserDataCookie);
+    const parsedUserDataCookie = getCurrentUserCookie();
     if (userData && userData.account_ids && userData.account_ids.length > 0) {
       // get the currentAccId from cookie if it exists. Otherwise, default to zeroth item.
       const accountData: AccountData = {
@@ -92,10 +106,8 @@ export function UserProvider({
       };
       setAccountDataState(accountData);
       // refactor this later to be an interface containing all items
-      const userDataCookie: UserDataCookie = {
-        accountData: accountData,
-      };
-      setCookie("userData", userDataCookie);
+
+      // cookie is set in useEffect that changes on state updates, not userData
     } else {
       // Handle the case where account IDs are not available
       // Could set to null or use a default state

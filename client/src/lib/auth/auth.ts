@@ -1,6 +1,8 @@
 import { createClient } from "@/utils/supabase/server";
 import { getUserData } from "@/data-access/users";
 import { UserData } from "@/data-access/users";
+import { CookieValueTypes, getCookie } from "cookies-next";
+import { UserDataCookie } from "./UserProvider";
 
 // this is responsible for auth related functions
 // it will also reference Supabase or other auth schemes we use
