@@ -204,13 +204,14 @@ VALUES
 -- Account 1: User1 (admin) and User2 (user)
 INSERT INTO public.account_users (user_id, account_id, created_at)
 VALUES
-  (user1_uuid, 1, now()), -- armcburn+a1admin@gmail.com for Account 1
+  (user1_uuid, 1, now()), -- armcburn+a1admin@gmail.com for Account 1 MULTI ACCOUNT USER
   (user2_uuid, 1, now()); -- armcburn+a1user@gmail.com for Account 1
 
 -- Account 2: User3 (admin)
 INSERT INTO public.account_users (user_id, account_id, created_at)
 VALUES
-  (user3_uuid, 2, now()); -- armcburn+a2admin@gmail.com for Account 2
+  (user3_uuid, 2, now()), -- armcburn+a2admin@gmail.com for Account 2
+  (user1_uuid, 2, now()); -- armcburn+a1admin@gmail.com for Account 2 MULTI ACCOUNT USER
 
 -- NOTE: posts are tied to accounts, not users.
 -- Insert posts for user1 (armcburn+a1admin@gmail.com) in Account 1
