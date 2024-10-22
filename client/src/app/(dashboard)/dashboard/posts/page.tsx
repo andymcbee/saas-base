@@ -55,6 +55,9 @@ export default function ActivityPage() {
                         {post.message}
                       </p>
                       <p className="text-xs text-gray-500">
+                        {post.category} - {post.status} - {post.created_at}
+                      </p>
+                      <p className="text-xs text-gray-500">
                         post id: {post.id} - account id: {post.account_id}
                       </p>
                     </div>

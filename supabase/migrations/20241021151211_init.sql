@@ -23,6 +23,8 @@ CREATE TABLE public.account_users (
 CREATE TABLE public.posts (
   id          serial PRIMARY KEY,                     -- Incremental ID for the posts table
   message     text NOT NULL,                          -- Message text field with no limits
+  status     text NOT NULL,                           -- published or draft, this would be an ENUM in real world app
+  category     text NOT NULL,                           -- Instagram, Facebook, Google, this would be an ENUM in real world app. We'd also have a dedicated table for this, not direct on here.
   account_id  integer REFERENCES public.accounts(id) ON DELETE CASCADE, -- Foreign key to public.accounts
   created_at  timestamp DEFAULT now()                 -- Created at, defaults to the current timestamp
 );

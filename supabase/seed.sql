@@ -215,21 +215,21 @@ VALUES
 
 -- NOTE: posts are tied to accounts, not users.
 -- Insert posts for user1 (armcburn+a1admin@gmail.com) in Account 1
-INSERT INTO public.posts (message, account_id, created_at)
+INSERT INTO public.posts (message, account_id, status, category, created_at)
 VALUES
-  ('This is the first post by armcburn+a1admin@gmail.com', 1, now()),
-  ('This is the second post by armcburn+a1admin@gmail.com', 1, now());
+  ('This is the first post by armcburn+a1admin@gmail.com', 1, 'published', 'Facebook', now()),
+  ('This is the second post by armcburn+a1admin@gmail.com', 1, 'draft', 'Google', now());
 
 -- Insert posts for user2 (armcburn+a1user@gmail.com) in Account 1
-INSERT INTO public.posts (message, account_id, created_at)
+INSERT INTO public.posts (message, account_id, status, category, created_at)
 VALUES
-  ('This is the first post by armcburn+a1user@gmail.com', 1, now()),
-  ('This is the second post by armcburn+a1user@gmail.com', 1, now());
+  ('This is the first post by armcburn+a1user@gmail.com', 1, 'published', 'Instagram', now()),
+  ('This is the second post by armcburn+a1user@gmail.com', 1, 'published', 'Facebook', now());
 
 -- Insert posts for user3 (armcburn+a2admin@gmail.com) in Account 2
-INSERT INTO public.posts (message, account_id, created_at)
+INSERT INTO public.posts (message, account_id, status, category, created_at)
 VALUES
-  ('This is the first post by armcburn+a2admin@gmail.com', 2, now()),
-  ('This is the second post by armcburn+a2admin@gmail.com', 2, now());
+  ('This is the first post by armcburn+a2admin@gmail.com', 2, 'published', 'Instagram', now()),
+  ('This is the second post by armcburn+a2admin@gmail.com', 2, 'draft', 'Google', now());
 
 END $$;
