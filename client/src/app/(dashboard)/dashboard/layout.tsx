@@ -15,7 +15,10 @@ export default function DashboardLayout({
   const pathname = usePathname();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const navItems = [{ href: "/dashboard", icon: Users, label: "Team" }];
+  const navItems = [
+    { href: "/dashboard", icon: Users, label: "Dashboard" },
+    { href: "/dashboard/posts", icon: Users, label: "Posts" },
+  ];
 
   return (
     <div className="flex flex-col min-h-[calc(100dvh-68px)] max-w-7xl mx-auto w-full">
