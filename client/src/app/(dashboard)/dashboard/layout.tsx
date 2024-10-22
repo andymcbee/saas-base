@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Users, Menu } from "lucide-react";
+import { AccountListDropdown } from "@/components/features/AccountListDropdown";
 
 export default function DashboardLayout({
   children,
@@ -43,6 +44,7 @@ export default function DashboardLayout({
           }`}
         >
           <nav className="h-full overflow-y-auto p-4">
+            <AccountListDropdown />
             {navItems.map((item) => (
               <Link key={item.href} href={item.href} passHref>
                 <Button
