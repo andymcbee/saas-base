@@ -20,43 +20,20 @@ import {
 } from "@/components/ui/popover";
 import { useUser } from "@/lib/auth/UserProvider";
 
-const frameworks = [
-  {
-    value: "next.js",
-    label: "Next.js",
-  },
-  {
-    value: "sveltekit",
-    label: "SvelteKit",
-  },
-  {
-    value: "nuxt.js",
-    label: "Nuxt.js",
-  },
-  {
-    value: "remix",
-    label: "Remix",
-  },
-  {
-    value: "astro",
-    label: "Astro",
-  },
-];
-
 export function AccountListDropdown() {
+  const { accountData, setAccountData } = useUser();
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
-  const { userData } = useUser();
+  // const [value, setValue] = React.useState(accountData?.currentAccountId);
 
-  console.log("IN FEATURES DROPDOWN...");
-  console.log(userData);
+  const accountIds = accountData?.accountIds;
+  const currentAccountId = accountData?.currentAccountId;
 
-  const accountIds = userData?.account_ids;
-
-  if (!accountIds || accountIds.length === 0) return;
-
-  // add this into the context
-  const currentAccountId = 1;
+  const handleSelect = (accountId: string) => {
+    if (accountId !== currentAccountId) {
+      setAccountData({ ...accountData, currentAccountId: accountId });
+    }
+    setOpen(false);
+  };
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -67,9 +44,9 @@ export function AccountListDropdown() {
           aria-expanded={open}
           className="w-[200px] justify-between"
         >
-          {value
-            ? frameworks.find((framework) => framework.value === value)?.label
-            : "Select framework..."}
+          {accountData?.currentAccountId
+            ? accountData.currentAccountId
+            : "Loading accounts..."}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -79,19 +56,18 @@ export function AccountListDropdown() {
           <CommandList>
             <CommandEmpty>No accounts found.</CommandEmpty>
             <CommandGroup>
-              {accountIds.map((account) => (
+              {accountIds?.map((account) => (
                 <CommandItem
                   key={account}
                   value={account.toString()}
-                  onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue);
-                    setOpen(false);
-                  }}
+                  onSelect={() => handleSelect(account)}
                 >
                   <Check
                     className={cn(
                       "mr-2 h-4 w-4",
-                      currentAccountId === account ? "opacity-100" : "opacity-0"
+                      accountData?.currentAccountId === account
+                        ? "opacity-100"
+                        : "opacity-0"
                     )}
                   />
                   {account}
