@@ -31,6 +31,6 @@ export async function assembleUserData(): Promise<UserData | null> {
   // Fetch additional user data such as tenants, roles, permissions, etc.
   const userData = await getUserData();
 
-  // Return the assembled user data
+  // Return the assembled user data which will be passed into auth provider
   return userData;
 }

@@ -1,4 +1,3 @@
-// UserProvider.tsx
 "use client";
 
 import {
@@ -9,6 +8,7 @@ import {
   useEffect,
 } from "react";
 import { UserData } from "@/data-access/users"; // Adjust the path
+import { setCookie } from "cookies-next";
 
 // Define the context type for user data.
 type UserContextType = {
@@ -40,6 +40,7 @@ export function UserProvider({
 
   useEffect(() => {
     setUserState(userData); // Update state if userData prop changes
+    setCookie("userData", userData);
   }, [userData]);
 
   // Return the provider with the current UserData and the setter function.
