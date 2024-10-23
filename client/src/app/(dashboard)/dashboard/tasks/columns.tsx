@@ -15,6 +15,7 @@ import {
 import { ColumnDef } from "@tanstack/react-table";
 
 import { MoreHorizontal, ArrowUpDown } from "lucide-react";
+import { DataTableColumnHeader } from "./column-header";
 
 export const columns: ColumnDef<Task>[] = [
   {
@@ -39,33 +40,33 @@ export const columns: ColumnDef<Task>[] = [
   },
   {
     accessorKey: "id",
-    header: "Id",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Id" />
+    ),
   },
   {
     accessorKey: "status",
-    header: "Status",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Status" />
+    ),
   },
   {
     accessorKey: "category",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Category
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Category" />
+    ),
   },
   {
     accessorKey: "priority",
-    header: "Priority",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Priority" />
+    ),
   },
   {
     accessorKey: "text",
-    header: "Test",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Text" />
+    ),
   },
   {
     accessorKey: "createdAt",
