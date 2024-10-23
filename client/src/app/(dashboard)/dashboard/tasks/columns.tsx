@@ -17,8 +17,20 @@ import { MoreHorizontal } from "lucide-react";
 
 export const columns: ColumnDef<Task>[] = [
   {
+    accessorKey: "id",
+    header: "Id",
+  },
+  {
     accessorKey: "status",
     header: "Status",
+  },
+  {
+    accessorKey: "category",
+    header: "Category",
+  },
+  {
+    accessorKey: "priority",
+    header: "Priority",
   },
   {
     accessorKey: "text",
