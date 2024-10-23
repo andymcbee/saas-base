@@ -5,6 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getTasks } from "./getTasks";
 import { createClient } from "@/utils/supabase/client";
 import { useQuery } from "@tanstack/react-query";
+import { DataTable } from "./data-table";
+import { columns } from "./columns";
 
 const supabase = createClient();
 
@@ -30,7 +32,8 @@ export default function tasksPage() {
     return <p>An error occurred: {errorMessage}</p>;
   }
 
-  console.log(data);
+  const tasks = data || [];
+
   return (
     <section className="flex-1 p-4 lg:p-8">
       <h1 className="text-lg lg:text-2xl font-medium text-gray-900 mb-6">
@@ -41,7 +44,7 @@ export default function tasksPage() {
           <CardTitle>Tasks</CardTitle>
         </CardHeader>
         <CardContent>
-          Card Content Here.... table goes here I think?
+          <DataTable columns={columns} data={tasks} />
         </CardContent>
       </Card>
     </section>
