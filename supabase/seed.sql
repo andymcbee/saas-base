@@ -234,8 +234,6 @@ VALUES
 
 END $$;
 
-
-
 -- NO RLS ON THE BELOW TABLES.
 -- JUST TESTING FILTERING ON THE UI.
 
@@ -260,20 +258,70 @@ INSERT INTO options (type_id, value) VALUES ((SELECT id FROM option_types WHERE 
 INSERT INTO options (type_id, value) VALUES ((SELECT id FROM option_types WHERE name = 'task_priority'), 'high');
 
 
-
--- No cat or priority
+-- Insert task with only status
 INSERT INTO tasks (text, status_id)
-VALUES (
-  'Fix server issue',
-  (SELECT id FROM options WHERE value = 'in-progress' AND type_id = (SELECT id FROM option_types WHERE name = 'task_status'))
-);
+VALUES 
+  ('Update project documentation', 
+    (SELECT id FROM options WHERE value = 'completed' AND type_id = (SELECT id FROM option_types WHERE name = 'task_status'))),
+  ('Review marketing strategy', 
+    (SELECT id FROM options WHERE value = 'pending' AND type_id = (SELECT id FROM option_types WHERE name = 'task_status'))),
+  ('Review team feedback', 
+    (SELECT id FROM options WHERE value = 'in-progress' AND type_id = (SELECT id FROM option_types WHERE name = 'task_status')));
 
--- all values
+-- Insert task with status and category
+INSERT INTO tasks (text, status_id, category_id)
+VALUES 
+  ('Prepare presentation slides', 
+    (SELECT id FROM options WHERE value = 'in-progress' AND type_id = (SELECT id FROM option_types WHERE name = 'task_status')),
+    (SELECT id FROM options WHERE value = 'development' AND type_id = (SELECT id FROM option_types WHERE name = 'task_category'))),
+  ('Analyze competitors', 
+    (SELECT id FROM options WHERE value = 'pending' AND type_id = (SELECT id FROM option_types WHERE name = 'task_status')),
+    (SELECT id FROM options WHERE value = 'marketing' AND type_id = (SELECT id FROM option_types WHERE name = 'task_category'))),
+  ('Draft sales proposal', 
+    (SELECT id FROM options WHERE value = 'completed' AND type_id = (SELECT id FROM option_types WHERE name = 'task_status')),
+    (SELECT id FROM options WHERE value = 'sales' AND type_id = (SELECT id FROM option_types WHERE name = 'task_category')));
+
+-- Insert task with status and priority
+INSERT INTO tasks (text, status_id, priority_id)
+VALUES 
+  ('Check email server', 
+    (SELECT id FROM options WHERE value = 'pending' AND type_id = (SELECT id FROM option_types WHERE name = 'task_status')),
+    (SELECT id FROM options WHERE value = 'medium' AND type_id = (SELECT id FROM option_types WHERE name = 'task_priority'))),
+  ('Audit financial records', 
+    (SELECT id FROM options WHERE value = 'completed' AND type_id = (SELECT id FROM option_types WHERE name = 'task_status')),
+    (SELECT id FROM options WHERE value = 'high' AND type_id = (SELECT id FROM option_types WHERE name = 'task_priority'))),
+  ('Test new software features', 
+    (SELECT id FROM options WHERE value = 'in-progress' AND type_id = (SELECT id FROM option_types WHERE name = 'task_status')),
+    (SELECT id FROM options WHERE value = 'urgent' AND type_id = (SELECT id FROM option_types WHERE name = 'task_priority')));
+
+-- Insert task with status, category, and priority
 INSERT INTO tasks (text, status_id, category_id, priority_id)
-VALUES (
-  'Write blog post',
-  (SELECT id FROM options WHERE value = 'pending' AND type_id = (SELECT id FROM option_types WHERE name = 'task_status')),
-  (SELECT id FROM options WHERE value = 'marketing' AND type_id = (SELECT id FROM option_types WHERE name = 'task_category')),
-  (SELECT id FROM options WHERE value = 'high' AND type_id = (SELECT id FROM option_types WHERE name = 'task_priority'))
-);
+VALUES 
+  ('Organize team outing', 
+    (SELECT id FROM options WHERE value = 'in-progress' AND type_id = (SELECT id FROM option_types WHERE name = 'task_status')),
+    (SELECT id FROM options WHERE value = 'marketing' AND type_id = (SELECT id FROM option_types WHERE name = 'task_category')),
+    (SELECT id FROM options WHERE value = 'low' AND type_id = (SELECT id FROM option_types WHERE name = 'task_priority'))),
+  ('Plan quarterly budget review', 
+    (SELECT id FROM options WHERE value = 'completed' AND type_id = (SELECT id FROM option_types WHERE name = 'task_status')),
+    (SELECT id FROM options WHERE value = 'finance' AND type_id = (SELECT id FROM option_types WHERE name = 'task_category')),
+    (SELECT id FROM options WHERE value = 'high' AND type_id = (SELECT id FROM option_types WHERE name = 'task_priority')));
 
+-- Insert multiple tasks at once with one having a NULL priority
+INSERT INTO tasks (text, status_id, category_id, priority_id)
+VALUES 
+  ('Deploy new website version', 
+    (SELECT id FROM options WHERE value = 'in-progress' AND type_id = (SELECT id FROM option_types WHERE name = 'task_status')),
+    (SELECT id FROM options WHERE value = 'IT' AND type_id = (SELECT id FROM option_types WHERE name = 'task_category')),
+    (SELECT id FROM options WHERE value = 'urgent' AND type_id = (SELECT id FROM option_types WHERE name = 'task_priority'))),
+  ('Conduct market research', 
+    (SELECT id FROM options WHERE value = 'pending' AND type_id = (SELECT id FROM option_types WHERE name = 'task_status')),
+    (SELECT id FROM options WHERE value = 'marketing' AND type_id = (SELECT id FROM option_types WHERE name = 'task_category')),
+    NULL),  -- No priority assigned
+  ('Write internal policy update', 
+    (SELECT id FROM options WHERE value = 'pending' AND type_id = (SELECT id FROM option_types WHERE name = 'task_status')),
+    NULL,  -- No category
+    NULL),  -- No priority
+  ('Organize client meeting', 
+    (SELECT id FROM options WHERE value = 'completed' AND type_id = (SELECT id FROM option_types WHERE name = 'task_status')),
+    NULL,  -- No category
+    (SELECT id FROM options WHERE value = 'low' AND type_id = (SELECT id FROM option_types WHERE name = 'task_priority')));
