@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { assembleUserData } from "@/lib/auth/auth";
 import { UserProvider } from "@/lib/auth/UserProvider";
+import { QueryProvider } from "./QueryProvider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -32,7 +33,9 @@ export default async function RootLayout({
       className={`bg-white dark:bg-gray-950 text-black dark:text-white ${geistSans.variable} ${geistMono.variable} antialiased`}
     >
       <body className="min-h-[100dvh] bg-gray-50">
-        <UserProvider userData={userDataPromise}>{children}</UserProvider>
+        <QueryProvider>
+          <UserProvider userData={userDataPromise}>{children}</UserProvider>
+        </QueryProvider>
       </body>
     </html>
   );

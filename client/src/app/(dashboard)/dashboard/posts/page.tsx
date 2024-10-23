@@ -33,6 +33,7 @@ export default function ActivityPage() {
   useEffect(() => {
     console.log("USE EFFECT TRIGGERED....");
     console.log(selectedStatuses);
+    // move this outside of page functrion.
     const supabase = createClient();
 
     const fetchData = async () => {
