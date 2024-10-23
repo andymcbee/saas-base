@@ -233,3 +233,47 @@ VALUES
   ('This is the second post by armcburn+a2admin@gmail.com', 2, 'draft', 'Google', now());
 
 END $$;
+
+
+
+-- NO RLS ON THE BELOW TABLES.
+-- JUST TESTING FILTERING ON THE UI.
+
+-- Insert into option_types table
+INSERT INTO option_types (name) VALUES ('task_status');
+INSERT INTO option_types (name) VALUES ('task_category');
+INSERT INTO option_types (name) VALUES ('task_priority');
+
+-- Insert into options table (status options)
+INSERT INTO options (type_id, value) VALUES ((SELECT id FROM option_types WHERE name = 'task_status'), 'in-progress');
+INSERT INTO options (type_id, value) VALUES ((SELECT id FROM option_types WHERE name = 'task_status'), 'completed');
+INSERT INTO options (type_id, value) VALUES ((SELECT id FROM option_types WHERE name = 'task_status'), 'pending');
+
+-- Insert into options table (category options)
+INSERT INTO options (type_id, value) VALUES ((SELECT id FROM option_types WHERE name = 'task_category'), 'development');
+INSERT INTO options (type_id, value) VALUES ((SELECT id FROM option_types WHERE name = 'task_category'), 'marketing');
+INSERT INTO options (type_id, value) VALUES ((SELECT id FROM option_types WHERE name = 'task_category'), 'sales');
+
+-- Insert into options table (priority options)
+INSERT INTO options (type_id, value) VALUES ((SELECT id FROM option_types WHERE name = 'task_priority'), 'low');
+INSERT INTO options (type_id, value) VALUES ((SELECT id FROM option_types WHERE name = 'task_priority'), 'medium');
+INSERT INTO options (type_id, value) VALUES ((SELECT id FROM option_types WHERE name = 'task_priority'), 'high');
+
+
+
+-- No cat or priority
+INSERT INTO tasks (text, status_id)
+VALUES (
+  'Fix server issue',
+  (SELECT id FROM options WHERE value = 'in-progress' AND type_id = (SELECT id FROM option_types WHERE name = 'task_status'))
+);
+
+-- all values
+INSERT INTO tasks (text, status_id, category_id, priority_id)
+VALUES (
+  'Write blog post',
+  (SELECT id FROM options WHERE value = 'pending' AND type_id = (SELECT id FROM option_types WHERE name = 'task_status')),
+  (SELECT id FROM options WHERE value = 'marketing' AND type_id = (SELECT id FROM option_types WHERE name = 'task_category')),
+  (SELECT id FROM options WHERE value = 'high' AND type_id = (SELECT id FROM option_types WHERE name = 'task_priority'))
+);
+
