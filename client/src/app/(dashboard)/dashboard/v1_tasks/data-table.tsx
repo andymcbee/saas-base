@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { Button } from "@/components/ui/button";
+import { DataTableFilterField, Task } from "./types";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -44,9 +45,32 @@ export function DataTable<TData, TValue>({
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
 
+  // MOVE TO OWN COMPONENT
+
+  // these are hard coded. We need a way to tie together these constant values
+  // to make managing the UI simple and centralized.
+  // I think possibly have a centralized object, and then map that object when creating the 'columns' and filter field items
+  // this means we sync it all, and just change in one place
+  // we can have a simple 'filter: bool' value to determine if a filterField is generated or not.
+  // We'll need to dynamically fetch the options. based on the option type constant.
+  // we'll also need to pass in the uuid... I think storing it in state will be critical.
+  const filterFields: DataTableFilterField<Task>[] = [
+    {
+      id: "status",
+      label: "Status",
+      options: ["todo", "in-progress", "done", "canceled"].map((status) => ({
+        label: status[0]?.toUpperCase() + status.slice(1),
+        value: status,
+      })),
+    },
+  ];
+
+  // END MOVE TO OWN COMPONENT
+
   const table = useReactTable({
     data,
     columns,
+    filterFields, // we need to abstract this into its own component... useDataTable..
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
