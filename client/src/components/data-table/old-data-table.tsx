@@ -1,16 +1,16 @@
 "use client";
 
-import * as React from "react";
-
+import { Option } from "@/types";
 import {
-  SortingState,
   ColumnDef,
+  ColumnFiltersState,
+  SortingState,
   flexRender,
   getCoreRowModel,
-  useReactTable,
+  getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  VisibilityState,
+  useReactTable,
 } from "@tanstack/react-table";
 
 import {
@@ -21,16 +21,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
-import { Button } from "@/components/ui/button";
-import { DataTableFilterField, Task } from "./types";
+import { Button } from "../ui/button";
+import { Input } from "@/components/ui/input";
+import React from "react";
+import { DataTableFacetedFilter } from "./data-table-faceted-filter";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -42,77 +36,54 @@ export function DataTable<TData, TValue>({
   data,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    []
+  );
 
-  // MOVE TO OWN COMPONENT
-
-  // these are hard coded. We need a way to tie together these constant values
-  // to make managing the UI simple and centralized.
-  // I think possibly have a centralized object, and then map that object when creating the 'columns' and filter field items
-  // this means we sync it all, and just change in one place
-  // we can have a simple 'filter: bool' value to determine if a filterField is generated or not.
-  // We'll need to dynamically fetch the options. based on the option type constant.
-  // we'll also need to pass in the uuid... I think storing it in state will be critical.
-  const filterFields: DataTableFilterField<Task>[] = [
-    {
-      id: "status",
-      label: "Status",
-      options: ["todo", "in-progress", "done", "canceled"].map((status) => ({
-        label: status[0]?.toUpperCase() + status.slice(1),
-        value: status,
-      })),
-    },
+  // we should pass this from a task-specific component, not hard code in data-table.tsx
+  const statusOptions: Option[] = [
+    { label: "Pending", value: "pending" },
+    { label: "Processing", value: "processing" },
+    { label: "Success", value: "success" },
+    { label: "Failed", value: "failed" },
   ];
-
-  // END MOVE TO OWN COMPONENT
 
   const table = useReactTable({
     data,
     columns,
-    filterFields, // we need to abstract this into its own component... useDataTable..
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
     state: {
       sorting,
-      columnVisibility,
+      columnFilters,
     },
   });
+
+  //table.setColumnFilters([{ id: "status", value: [] }]);
+  // table.setColumnFilters([{ id: "status", value: ["success"] }])
 
   return (
     <div>
       <div className="flex items-center py-4">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columns
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Input
+          placeholder="Filter emails..."
+          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+          onChange={(event) =>
+            table.getColumn("email")?.setFilterValue(event.target.value)
+          }
+          className="max-w-sm"
+        />
+        <DataTableFacetedFilter
+          key={"status"} // column id AS A STRING.
+          column={table.getColumn("status")}
+          title="Column Label"
+          options={statusOptions} // hard coded. these'll pull dynamic. Look into how they do this.
+        />
       </div>
-
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -126,7 +97,7 @@ export function DataTable<TData, TValue>({
                         : flexRender(
                             header.column.columnDef.header,
                             header.getContext()
-                          )}{" "}
+                          )}
                     </TableHead>
                   );
                 })}
@@ -180,10 +151,6 @@ export function DataTable<TData, TValue>({
         >
           Next
         </Button>
-      </div>
-      <div className="flex-1 text-sm text-muted-foreground">
-        {table.getFilteredSelectedRowModel().rows.length} of{" "}
-        {table.getFilteredRowModel().rows.length} row(s) selected.
       </div>
     </div>
   );

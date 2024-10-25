@@ -4,6 +4,8 @@ import "./globals.css";
 import { assembleUserData } from "@/lib/auth/auth";
 import { UserProvider } from "@/lib/auth/UserProvider";
 import { QueryProvider } from "./QueryProvider";
+import { Toaster } from "sonner";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -34,8 +36,11 @@ export default async function RootLayout({
     >
       <body className="min-h-[100dvh] bg-gray-50">
         <QueryProvider>
-          <UserProvider userData={userDataPromise}>{children}</UserProvider>
+          <UserProvider userData={userDataPromise}>
+            <NuqsAdapter>{children}</NuqsAdapter>
+          </UserProvider>
         </QueryProvider>
+        <Toaster />
       </body>
     </html>
   );

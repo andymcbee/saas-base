@@ -1,6 +1,7 @@
 import { SupabaseClient } from "@supabase/supabase-js";
-import { Task } from "./types";
+import { Task } from "@/types";
 //helper
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const formatTasks = (rawTasks: any[]): Task[] => {
   return rawTasks.map((task) => ({
     id: task.id,
@@ -13,17 +14,11 @@ const formatTasks = (rawTasks: any[]): Task[] => {
 };
 
 // Define the function to get tasks with optional category and status filters
-export async function getTasks(
-  supabase: SupabaseClient,
-  {
-    categoryIds = [],
-    statusId = null,
-  }: { categoryIds?: number[]; statusId?: number | null }
-): Promise<Task[]> {
+export async function getTasks(supabase: SupabaseClient): Promise<Task[]> {
   // Specify the return type as Promise<Task[]> {
   // Start building the query
 
-  let query = supabase.from("tasks").select(`
+  const query = supabase.from("tasks").select(`
     id,
     text,
     created_at,
