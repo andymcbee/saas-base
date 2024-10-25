@@ -13,3 +13,10 @@ export interface Option {
   icon?: React.ComponentType<{ className?: string }>;
   count?: number;
 }
+
+export interface DataTableFilterField<TData> {
+  id: keyof TData;
+  label: string;
+  placeholder?: string;
+  options?: Option[];
+}

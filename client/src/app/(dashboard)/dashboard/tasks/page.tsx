@@ -1,6 +1,6 @@
 "use client";
 
-import { Payment } from "./columns";
+import { Payment } from "./_components/tasks-table-columns";
 import { TasksTable } from "./_components/tasks-table";
 
 export default function DemoPage() {
